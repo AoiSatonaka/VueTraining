@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Vue</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        .v-enter-active {
+            transition: opacity 5s;
+        }
+        .v-enter {
+            opacity: 0;
+        }
+        .v-enter-to {
+            opacity: 1;
+        }
+        .v-leave-active {
+            transition:opacity 2s;
+        }
+        .v-leave :hover {
+            opacity: 1;
+        }
+        .v-leave-to {
+            opacity: .5;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <span v-if="hoge!=null">{{hoge}}</span>
+        <span>
+            {{ message }}
+        </span>
+        <div>
+            <table v-if="todos">
+                <thead>
+                    <th>title</th>
+                    <th>content</th>
+                </thead>
+                <tbody>
+                    <tr v-for="todo in todos">
+                        <td>{{todo.title}}</td>
+                        <td>{{todo.content}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="callMethodTest">
+            <span>{{callMethodTest}}</span>
+            <button @click="reverseMessage">reverse</button>
+        </div>
+
+        <div id="v-modelTest">
+            <span>{{modelTest}}</span>
+            <input type="text" v-model="modelTest" />
+        </div>
+        
+        <div class="transitionTest">
+            <transition appear>
+                <div v-html="transitionTest"></div>
+            </transition>
+        </div>
+
+        <div class="compTest">
+            <comptest></comptest>
+        </div>
+
+        <div class="calc">
+            <span >
+                <input type="number" name="num1" v-model.number="calcData.num1" />
+                <select name="operator" v-model="calcData.operator" >
+                   <option v-for="(ope,ind) in operators">{{ ope }}</option>
+                </select>
+                <input type="number" name="num2" v-model.number="calcData.num2"  />
+            </span>
+            =
+            <span v-if="done">{{ answer }}</span>
+        </div>
+    </div>
+
+    <script>
+        Vue.component('comptest',{
+            template:'<div>Vue.component</div>'
+        });
+        const app = new Vue({
+            el: "#app",
+            data: {
+                hoge: null,
+                message: "Hello Vue!!!!!!",
+                todos: [
+                    {title:"a",content:"hoge"},
+                    {title:"b",content:"fuga"},
+                    {title:"c",content:"hogefuga"}
+                ],
+                callMethodTest: "callMethodTest(reverse)", 
+                modelTest: "v-modelTest",
+                transitionTest: "<p>hogefuga</p>",
+                operators: ["+","-","×","÷"],
+                calcData: {
+                    num1: 0,
+                    num2: 0,
+                    operator: "+",
+                }
+            },
+            computed: {
+                answer(){
+                    switch (this.calcData.operator) {
+                        case "+":
+                           return this.calcData.num1 + this.calcData.num2
+                            break;
+                        case "-":
+                            return this.calcData.num1 - this.calcData.num2
+                            break;
+                        case "×":
+                            return this.calcData.num1 * this.calcData.num2
+                            break;
+                        case "÷":
+                            return this.calcData.num1 / this.calcData.num2
+                            break;
+                    }
+                },
+                done(){
+                    return this.calcData.num1 !== 0 && this.calcData.num2 !== 0;
+                }
+            },
+            methods: {
+                reverseMessage: function (){
+                    this.callMethodTest = this.callMethodTest.split('').reverse().join("")
+                },
+            }
+        })
+    </script>
+</body>
+</html>
